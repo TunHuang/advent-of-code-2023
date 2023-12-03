@@ -5,7 +5,7 @@ const inputArray = input.split('\n');
 const getNumberLength = (str, index) => {
   if (isNaN(str[index + 1])) return 1;
   return 1 + getNumberLength(str, index + 1);
-}
+};
 
 const isAdjacentToSymbol = (arr, y, x, length) => {
   const digitAndDot = '0123456789.';
@@ -15,7 +15,7 @@ const isAdjacentToSymbol = (arr, y, x, length) => {
     }
   }
   return false;
-}
+};
 
 const calcSumEngineSchematic = (arr) => {
   let sum = 0;
@@ -32,7 +32,7 @@ const calcSumEngineSchematic = (arr) => {
     }
   }
   return sum;
-}
+};
 console.log(calcSumEngineSchematic(inputArray));
 
 // part 2
@@ -46,8 +46,8 @@ const findStartAndEndIndex = (str, index) => {
   while (digits.includes(str[endIndex + 1])) {
     endIndex++;
   }
-  return {startIndex, endIndex};
-}
+  return { startIndex, endIndex };
+};
 
 const getGearRatio = (arr, y, x) => {
   const digits = '0123456789';
@@ -56,7 +56,7 @@ const getGearRatio = (arr, y, x) => {
     for (let j = x - 1; j < x + 2; j++) {
       if (digits.includes(arr[i]?.[j] ?? '.')) {
         if (partNumbers.length === 2) return 0;
-        const {startIndex, endIndex} = findStartAndEndIndex(arr[i], j);
+        const { startIndex, endIndex } = findStartAndEndIndex(arr[i], j);
         const newNumber = +arr[i].slice(startIndex, endIndex + 1);
         partNumbers.push(newNumber);
         j = endIndex;
@@ -65,9 +65,9 @@ const getGearRatio = (arr, y, x) => {
   }
   if (partNumbers.length < 2) return 0;
   return partNumbers[0] * partNumbers[1];
-}
+};
 
-const calcSumGearRatios = arr => {
+const calcSumGearRatios = (arr) => {
   let sum = 0;
   for (let y = 0; y < arr.length; y++) {
     for (let x = 0; x < arr[y].length; x++) {
@@ -77,6 +77,6 @@ const calcSumGearRatios = arr => {
     }
   }
   return sum;
-}
+};
 
 console.log(calcSumGearRatios(inputArray));
