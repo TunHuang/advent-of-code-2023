@@ -26,15 +26,17 @@ const matchingList = cardsArray.map((card) => {
 const points = matchingList.reduce((sum, matching) => matching === 0 ? sum : sum + 2 ** (matching - 1), 0);
 console.log(points);
 
-// Part 2
-const copiesList = new Array(cardsArray.length).fill(1);
-
-matchingList.forEach((matching, index) => {
-  const copies = copiesList[index];
-  for (let i = 0; i < matching; i++) {
-    copiesList[index + 1 + i] += copies;
+// // Part 2
+const countSelfAndSpawnedCards = (matchArr, index) => {
+  let cards = 1;
+  for (let i = 0; i < matchArr[index]; i++) {
+    cards += countSelfAndSpawnedCards(matchArr, index + 1 + i);
   }
-});
+  return cards;
+}
 
-const totalCards = copiesList.reduce((sum, copies) => sum + copies);
-console.log(totalCards);
+let sum = 0;
+for (let i = 0; i < matchingList.length; i++) {
+  sum += countSelfAndSpawnedCards(matchingList, i);
+}
+console.log(sum);
