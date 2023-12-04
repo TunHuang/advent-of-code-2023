@@ -23,7 +23,10 @@ const matchingList = cardsArray.map((card) => {
   return matching;
 });
 
-const points = matchingList.reduce((sum, matching) => matching === 0 ? sum : sum + 2 ** (matching - 1), 0);
+const points = matchingList.reduce(
+  (sum, matching) => (matching === 0 ? sum : sum + 2 ** (matching - 1)),
+  0
+);
 console.log(points);
 
 // // Part 2
@@ -33,7 +36,7 @@ const countSelfAndSpawnedCards = (matchArr, index) => {
     cards += countSelfAndSpawnedCards(matchArr, index + 1 + i);
   }
   return cards;
-}
+};
 
 let sum = 0;
 for (let i = 0; i < matchingList.length; i++) {
