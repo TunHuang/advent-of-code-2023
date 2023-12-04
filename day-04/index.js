@@ -38,8 +38,8 @@ const countSelfAndSpawnedCards = (matchArr, index) => {
   return cards;
 };
 
-let sum = 0;
-for (let i = 0; i < matchingList.length; i++) {
-  sum += countSelfAndSpawnedCards(matchingList, i);
-}
+const sum = matchingList.reduce(
+  (sum, _, i, arr) => sum + countSelfAndSpawnedCards(arr, i),
+  0
+);
 console.log(sum);
