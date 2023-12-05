@@ -13,15 +13,12 @@ const cardsArray = input
     )
   );
 
-const matchingList = cardsArray.map((card) => {
-  let matching = 0;
-  card[1].forEach((number) => {
-    if (card[0].includes(number)) {
-      matching++;
-    }
-  });
-  return matching;
-});
+const matchingList = cardsArray.map(([winningNums, myNums]) =>
+  myNums.reduce(
+    (matching, num) => (winningNums.includes(num) ? matching + 1 : matching),
+    0
+  )
+);
 
 const points = matchingList.reduce(
   (sum, matching) => (matching === 0 ? sum : sum + 2 ** (matching - 1)),
