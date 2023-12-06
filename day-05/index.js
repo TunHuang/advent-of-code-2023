@@ -35,7 +35,7 @@ humidity-to-location map:
 56 93 4`;
 
 const inputTable = Object.fromEntries(
-  input
+  testinput
     .split('\n\n')
     .map((section, index) =>
       index === 0 ? section.split(': ') : section.split(':\n')
@@ -73,21 +73,21 @@ const getDestination = (source, map) => {
   return source;
 };
 
-const locationList = seeds.map((seed) =>
-  [
-    seedToSoil,
-    soilToFertilizer,
-    fertilizerToWater,
-    waterToLight,
-    lightToTemperatur,
-    temperatureToHumidity,
-    humidityToLocation,
-  ].reduce((accu, curr) => getDestination(accu, curr), seed)
-);
+// const locationList = seeds.map((seed) =>
+//   [
+//     seedToSoil,
+//     soilToFertilizer,
+//     fertilizerToWater,
+//     waterToLight,
+//     lightToTemperatur,
+//     temperatureToHumidity,
+//     humidityToLocation,
+//   ].reduce((accu, curr) => getDestination(accu, curr), seed)
+// );
 
-const lowestLocation = Math.min(...locationList);
+// const lowestLocation = Math.min(...locationList);
 
-console.log(lowestLocation);
+// console.log(lowestLocation);
 
 // Part 2
 const seedRanges = seeds.reduce(
@@ -98,7 +98,35 @@ const seedRanges = seeds.reduce(
   []
 );
 console.log(seedRanges);
+// Idee ist, die ranges zu mergen. Aber da der Code selbst für einen einzigen Range schon zu langsam ist, würde es nicht reichen.
 
+// const sortedSeedRanges = seedRanges.sort(([start1], [start2]) => start1 - start2);
+// console.log(sortedSeedRanges);
+
+// for (let i = 0; i < seedRanges.length - 1; i++) {
+//   if (seedRanges[i][0] + seedRanges[i][1] >= seedRanges[i+1][0]) {
+//     const mergedRange = seedRanges[i];
+//     if (seedRanges[i][0] + seedRanges[i][1] < seedRanges[i+1][0] + seedRanges[i+1][1]) {
+//       mergedRange[1] = 
+//     }
+//   }
+// }
+
+// const mergedRange = seedRanges.reduce((accuRange, currRange) => {
+//   if (currRange[0] - accuRange[0] >= accuRange[1] || currRange[0] + currRange[1] <= accuRange[0]) {
+//     return accuRange;
+//   }
+//   const newRange = accuRange;
+//   if (currRange[0] < accuRange[0]) {
+//     newRange[0] = currRange[0];
+//   }
+//   if (currRange[0] + currRange[1] > accuRange[0] + accuRange[1]) {
+//     newRange[1] = accuRange[0] + (currRange[0] + currRange[1] - (accuRange[0] + accuRange[1]));
+//   }
+//   return newRange;
+// });
+// console.log(mergedRange);
+/* 
 const getLowestLocationFromRange = ([start, length]) => {
   let lowest = Infinity;
   for (let i = 0; i < length; i++) {
@@ -142,3 +170,4 @@ console.log(result);
 //   return result < lowest ? result : lowest;
 // }, Infinity);
 // console.log(lowestLocation2);
+ */
