@@ -82,5 +82,8 @@ inputArray.sort(([hand1], [hand2]) => {
   return compareCardByCard(hand1, hand2);
 });
 
-const totalWinning = inputArray.reduce((winning, curr, index) => winning + curr[1] * (index + 1), 0);
+const totalWinning = inputArray.reduce(
+  (winning, curr, index) => winning + curr[1] * (index + 1),
+  0
+);
 console.log(totalWinning);
