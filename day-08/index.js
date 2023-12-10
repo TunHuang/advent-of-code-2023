@@ -25,7 +25,7 @@ const testinput3 = `LR
 22Z = (22B, 22B)
 XXX = (XXX, XXX)`;
 
-const [instructions, inputRest] = testinput3.split('\n\n');
+const [instructions, inputRest] = input.split('\n\n');
 // const [instructions, inputRest] = input.split('\n\n');
 const maps = inputRest
   .split('\n')
@@ -67,7 +67,16 @@ const mapsObj = Object.fromEntries(maps);
 // }
 // console.log(steps);
 
-// idea with something similar as lcm. Still don't know how to calc it with the offsets
+// idea with something similar as lcm. Still don't know how to calc it with the offsets. Bézout's identity? Chinese remainder theorem
+/* 
+    function gcd(a, b) {
+        return !b ? a : gcd(b, a % b);
+    }
+
+    function lcm(a, b) {
+        return (a * b) / gcd(a, b);   
+    }
+*/
 const startingNodes = maps.reduce((list, [currNode]) => currNode.endsWith('A') ? [...list, currNode] : list, []);
 
 const patternList = startingNodes.map(node => {
@@ -90,3 +99,65 @@ const patternList = startingNodes.map(node => {
   return {historyLength: history.length, index, loopLength: history.length - index};
 });
 console.log(patternList);
+
+const modularMultiplicativeInverse = (a, modulus) => {
+  // Calculate current value of a mod modulus
+  const b = a % modulus;
+    
+    // We brute force the search for the smaller hipothesis, as we know that the number must exist between the current given modulus and 1
+    for (let hipothesis = 1n; hipothesis <= modulus; hipothesis++) {
+        if ((b * hipothesis) % modulus == 1n) return hipothesis;
+    }
+      // If we do not find it, we return 1
+    return 1n;
+}
+
+const solveCRT = (remainders, modules) => {
+  // Multiply all the modulus
+  const prod = modules.reduce((acc, val) => acc * val, 1n);
+  
+  return modules.reduce((sum, mod, index) => {
+      // Find the modular multiplicative inverse and calculate the sum
+  // SUM( remainder * productOfAllModulus/modulus * MMI ) (mod productOfAllModulus) 
+      const p = prod / mod;
+      return sum + (remainders[index] * modularMultiplicativeInverse(p, mod) * p);
+  }, 0n) % prod;
+}
+
+function crt(num, rem) {
+  let sum = 0;
+  const prod = num.reduce((a, c) => a * c, 1);
+
+  for (let i = 0; i < num.length; i++) {
+    const [ni, ri] = [num[i], rem[i]];
+    const p = Math.floor(prod / ni);
+    sum += ri * p * mulInv(p, ni);
+  }
+  return sum % prod;
+}
+
+function mulInv(a, b) {
+  const b0 = b;
+  let [x0, x1] = [0, 1];
+
+  if (b === 1) {
+    return 1;
+  }
+  while (a > 1) {
+    const q = Math.floor(a / b);
+    [a, b] = [b, a % b];
+    [x0, x1] = [x1 - q * x0, x0];
+  }
+  if (x1 < 0) {
+    x1 += b0;
+  }
+  return x1;
+}
+
+const remainderList = patternList.reduce((arr, pattern) => [...arr, pattern.index - 1], []);
+const remainderListBigInt = remainderList.map(BigInt);
+const modulesList = patternList.reduce((arr, pattern) => [...arr, pattern.loopLength], []);
+const modulesListBigInt = modulesList.map(BigInt);
+console.log(remainderListBigInt, modulesListBigInt);
+const solution = solveCRT(remainderListBigInt, modulesListBigInt);
+console.log(solution);
