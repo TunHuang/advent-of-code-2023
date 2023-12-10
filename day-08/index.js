@@ -1,0 +1,92 @@
+const fs = require('fs');
+const input = fs.readFileSync('input.txt', 'utf8');
+const testinput = `RL
+
+AAA = (BBB, CCC)
+BBB = (DDD, EEE)
+CCC = (ZZZ, GGG)
+DDD = (DDD, DDD)
+EEE = (EEE, EEE)
+GGG = (GGG, GGG)
+ZZZ = (ZZZ, ZZZ)`;
+const testinput2 = `LLR
+
+AAA = (BBB, BBB)
+BBB = (AAA, ZZZ)
+ZZZ = (ZZZ, ZZZ)`
+const testinput3 = `LR
+
+11A = (11B, XXX)
+11B = (XXX, 11Z)
+11Z = (11B, XXX)
+22A = (22B, XXX)
+22B = (22C, 22C)
+22C = (22Z, 22Z)
+22Z = (22B, 22B)
+XXX = (XXX, XXX)`;
+
+const [instructions, inputRest] = testinput3.split('\n\n');
+// const [instructions, inputRest] = input.split('\n\n');
+const maps = inputRest
+  .split('\n')
+  .map((line) => line.split(' = '))
+  .map(lineArr => [lineArr[0], lineArr[1].slice(1, -1).split(', ')])
+const mapsObj = Object.fromEntries(maps);
+// console.log(mapsObj);
+
+// Part 1
+// let steps = 0;
+// let current = 'AAA';
+// const DESTINATION = 'ZZZ';
+
+// while (current !== DESTINATION) {
+//   const direction = instructions[steps % instructions.length];
+//   const instruction = mapsObj[current];
+//   current = direction === 'L' ? instruction[0] : instruction[1];
+//   steps++;
+// }
+// console.log(steps);
+
+// Part 2
+
+// Brute Force
+// let currentNodes = maps.reduce((list, [currNode]) => currNode.endsWith('A') ? [...list, currNode] : list, []);
+// console.log(currentNodes);
+// let arrived = false;
+// let steps = 0;
+
+// while (!arrived) {
+//   const direction = instructions[steps % instructions.length];
+//   currentNodes = currentNodes.map(node => {
+//     const instruction = mapsObj[node];
+//     return direction === 'L' ? instruction[0] : instruction[1];
+//   });
+//   console.log("next nodes:", currentNodes);
+//   steps++;
+//   arrived = currentNodes.every(node => node.endsWith('Z'));
+// }
+// console.log(steps);
+
+// idea with something similar as lcm. Still don't know how to calc it with the offsets
+const startingNodes = maps.reduce((list, [currNode]) => currNode.endsWith('A') ? [...list, currNode] : list, []);
+
+const patternList = startingNodes.map(node => {
+  let currentNode = node;
+  const history = [currentNode];
+  let arrived = false;
+  let steps = 0;
+  while (!arrived) {
+    const direction = instructions[steps % instructions.length];
+    const instruction = mapsObj[currentNode];
+    currentNode = direction === 'L' ? instruction[0] : instruction[1];
+    history.push(currentNode);
+    steps++;
+    arrived = currentNode.endsWith('Z');
+  }
+  const direction = instructions[steps % instructions.length];
+  const instruction = mapsObj[currentNode];
+  const nextNode = direction === 'L' ? instruction[0] : instruction[1];
+  const index = history.indexOf(nextNode);
+  return {historyLength: history.length, index, loopLength: history.length - index};
+});
+console.log(patternList);
